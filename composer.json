@@ -1,5 +1,6 @@
 {   "autoload": {
-	"psr-4": {"App\\": "src/"}
+	"psr-4": {"App\\": "/../src/"},
+	"files": ["/../src/Generator.php"]
    },
     "require": {
         "slim/slim": "^3.0",

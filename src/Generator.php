@@ -2,7 +2,7 @@
 
 namespace App;
 
-//class Generator
+class Generator
 {
     public static function generate($count)
     {
@@ -23,3 +23,4 @@ namespace App;
         return $companies;
     }
 }
+
