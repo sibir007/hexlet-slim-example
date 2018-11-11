@@ -1,0 +1,23 @@
+
+<!-- BEGIN (write your solution here) -->
+
+<?php 
+
+$html = collect($users)->map(function($user){
+    return '<a href=/users/' . $user['id'] . '>' . 
+    $user['firstName'] . ' ' . $user['lastName'] .
+    ' ' . $user['email'] . '</a>';
+})->implode('<br>');
+echo $html;
+?>
+<br>
+<?php
+$page1 = $param[0] == 1 ? 1 : $param[0] - 1;
+$page2 = $page1 + 1;
+$page3 = $page2 + 1;
+?>
+<a href=users?page=<?=$page1?>><?=$page1?></a>
+<?=$page2?>
+<a href=users?page=<?=$page3?>><?=$page3?></a>
+<!-- END -->
+

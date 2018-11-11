@@ -1,28 +1,42 @@
 <?php
+namespace App;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-require __DIR__ . '/../src/Generator.php'; 
+require __DIR__ . '/../src/Generator.php';
 use App\Generator;
+use Slim\Views\PhpRenderer;
+require __DIR__ . "/../vendor/PHP-View/src/PhpRenderer.php";
 
-
-$companies = \App\Generator::generate(100);
+$users = \App\Generator::generate(100);
 
 $configuration = [
     'settings' => [
         'displayErrorDetails' => true,
-    ],
+    ]
 ];
-
 $app = new \Slim\App($configuration);
+$container = $app->getContainer();
 
-// BEGIN (write your solution here)
-$app->get('/companies/{id}', function ($request, $response, array $args) use ($companies){
-    $id = $args['id'];
-    $company = collect($companies)->firstWhere('id', $id);
-    $jsonCompany = json_encode($company);
-    return $response->write($jsonCompany);
+$container['renderer'] =  new \Slim\Views\PhpRenderer(__DIR__ . '/../templates');
 
+$app->get('/', function ($request, $response) {
+    return $this->renderer->render($response, 'a1.ph'); 
+});
+$app->get('/users', function ($request, $response) use ($users) {
+    $page = $request->getQueryParam('page', 1);
+    $per = $request->getQueryParam('per', 5);
+    $resUsersArr = 
+    [
+        'users' => array_slice($users, ($page-1) * $per, $per),
+        'param' => [$page, $per]
+    ];
+    return $this->renderer->render($response, '/users/index.phtml', $resUsersArr);
+});
+$app->get('/users/{id}', function ($request, $response, $args) use ($users) {
+    $id= $args['id'];
+    $user = collect($users)->firstWhere('id', $id);
+    return $this->renderer->render($response, 'users/show.phtml', $user);
 });
 $app->run();
 // END
